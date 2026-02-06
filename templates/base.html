@@ -63,26 +63,31 @@
     </div>
   </dialog>
 
- <script>
-  // Load Zola search index using dynamic import
+<script>
+  // Load Zola search index
   let searchData = null;
+  let searchReady = false;
 
-  // Create a script element to load the search index
   const script = document.createElement('script');
   script.src = '/search_index.ru.js';
   script.async = true;
   script.onload = function() {
-    // Zola sets window.search automatically
-    searchData = window.search;
-    console.log('Search index loaded successfully');
-    console.log('Search data structure:', searchData);
-    if (searchData && searchData.index) {
-      console.log('Number of documents indexed:', searchData.index.length);
-      console.log('Sample document:', searchData.index[0]);
+    // Zola creates window.searchIndex, not window.search!
+    searchData = window.searchIndex;
+    searchReady = true;
+    console.log('✓ Search index loaded');
+    console.log('Documents indexed:', searchData?.index?.length || 0);
+    if (searchData?.index?.[0]) {
+      console.log('Sample:', searchData.index[0]);
+    }
+
+    // Update search if dialog is open
+    if (searchDialog.open && searchInput.value.length >= 2) {
+      performSearch(searchInput.value);
     }
   };
   script.onerror = function() {
-    console.error('Failed to load search index');
+    console.error('✗ Failed to load search index');
   };
   document.head.appendChild(script);
 
@@ -111,6 +116,12 @@
   searchTrigger.addEventListener('click', () => {
     searchDialog.showModal();
     searchInput.focus();
+
+    // Show loading message if search not ready
+    if (!searchReady) {
+      searchMessage.textContent = 'Загрузка индекса поиска...';
+      searchResults.innerHTML = '';
+    }
   });
 
   // Close search dialog
@@ -118,7 +129,7 @@
     searchDialog.close();
     searchInput.value = '';
     searchResults.innerHTML = '';
-    searchMessage.textContent = 'Start typing to search...';
+    searchMessage.textContent = 'Начните вводить для поиска...';
     searchMessage.style.display = 'block';
   });
 
@@ -128,7 +139,7 @@
       searchDialog.close();
       searchInput.value = '';
       searchResults.innerHTML = '';
-      searchMessage.textContent = 'Start typing to search...';
+      searchMessage.textContent = 'Начните вводить для поиска...';
       searchMessage.style.display = 'block';
     }
     // Ctrl+K or Cmd+K to open search
@@ -151,18 +162,34 @@
       searchDialog.close();
       searchInput.value = '';
       searchResults.innerHTML = '';
-      searchMessage.textContent = 'Start typing to search...';
+      searchMessage.textContent = 'Начните вводить для поиска...';
       searchMessage.style.display = 'block';
     }
   });
 
-  // Simple search implementation
+  // Search implementation
   const performSearch = debounce((query) => {
-    console.log('Searching for:', query);
+    console.log('🔍 Searching for:', query);
 
-    if (!searchData || !searchData.index || query.length < 2) {
-      console.log('No search data or query too short');
-      searchMessage.textContent = 'Start typing to search...';
+    // Check if search is ready
+    if (!searchReady) {
+      console.log('⚠️ Search index not ready yet');
+      searchMessage.textContent = 'Загрузка индекса поиска...';
+      searchResults.innerHTML = '';
+      searchMessage.style.display = 'block';
+      return;
+    }
+
+    if (!searchData || !searchData.index) {
+      console.error('❌ Search data structure is invalid');
+      searchMessage.textContent = 'Ошибка: индекс поиска недоступен';
+      searchResults.innerHTML = '';
+      searchMessage.style.display = 'block';
+      return;
+    }
+
+    if (query.length < 2) {
+      searchMessage.textContent = 'Начните вводить для поиска...';
       searchResults.innerHTML = '';
       searchMessage.style.display = 'block';
       return;
@@ -175,7 +202,7 @@
     const results = [];
     const lowerQuery = query.toLowerCase().trim();
 
-    console.log('Total documents to search:', searchData.index.length);
+    console.log('📊 Total documents:', searchData.index.length);
 
     // Search through all documents
     for (const doc of searchData.index) {
@@ -188,7 +215,7 @@
       const bodyMatch = bodyLower.includes(lowerQuery);
 
       if (titleMatch || bodyMatch) {
-        // Find snippet around the match
+        // Create snippet
         let snippet = '';
         if (bodyMatch) {
           const index = bodyLower.indexOf(lowerQuery);
@@ -209,18 +236,17 @@
           snippet: snippet
         });
 
-        // Limit to 20 results
         if (results.length >= 20) break;
       }
     }
 
-    console.log('Found', results.length, 'results');
+    console.log('✅ Found', results.length, 'results');
 
     // Display results
     if (results.length === 0) {
       searchResults.innerHTML = `
         <div class="search-message">
-          <p>Ничего не найдено для "${query}"</p>
+          <p>Ничего не найдено для "${escapeHtml(query)}"</p>
         </div>
       `;
     } else {
@@ -240,25 +266,23 @@
   // Search input handler
   searchInput.addEventListener('input', (e) => {
     const query = e.target.value.trim();
-    console.log('Input changed:', query);
+    console.log('⌨️ Input:', query);
     performSearch(query);
   });
 
-  // Helper function to escape HTML
+  // Helper functions
   function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
   }
 
-  // Helper function to highlight matches
   function highlightMatch(text, query) {
     if (!query) return text;
     const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
     return text.replace(regex, '<mark>$1</mark>');
   }
 
-  // Helper function to escape regex special characters
   function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
