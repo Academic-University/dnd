@@ -69,18 +69,17 @@
   let searchReady = false;
 
   const script = document.createElement('script');
-  // Use get_url to generate correct path with base_url
   script.src = '{{ get_url(path="search_index.ru.js") }}';
   script.async = true;
   script.onload = function() {
-    // Zola creates window.searchIndex, not window.search!
-    searchData = window.searchIndex;
+    searchData = window.searchIndex;  // Zola uses window.searchIndex
     searchReady = true;
     console.log('✓ Search index loaded');
-    console.log('Documents indexed:', searchData?.index?.length || 0);
-    if (searchData?.index?.[0]) {
-      console.log('Sample:', searchData.index[0]);
-    }
+
+    // Get document count from documentStore
+    const docCount = searchData?.documentStore?.docs ?
+      Object.keys(searchData.documentStore.docs).length : 0;
+    console.log('Documents indexed:', docCount);
 
     // Update search if dialog is open
     if (searchDialog.open && searchInput.value.length >= 2) {
@@ -172,7 +171,6 @@
   const performSearch = debounce((query) => {
     console.log('🔍 Searching for:', query);
 
-    // Check if search is ready
     if (!searchReady) {
       console.log('⚠️ Search index not ready yet');
       searchMessage.textContent = 'Загрузка индекса поиска...';
@@ -181,7 +179,7 @@
       return;
     }
 
-    if (!searchData || !searchData.index) {
+    if (!searchData || !searchData.documentStore || !searchData.documentStore.docs) {
       console.error('❌ Search data structure is invalid');
       searchMessage.textContent = 'Ошибка: индекс поиска недоступен';
       searchResults.innerHTML = '';
@@ -202,66 +200,51 @@
 
     const results = [];
     const lowerQuery = query.toLowerCase().trim();
+    const docs = searchData.documentStore.docs;
 
-    console.log('📊 Total documents:', searchData.index.length);
+    console.log('📊 Total documents:', Object.keys(docs).length);
 
-    // Search through all documents
-    for (const doc of searchData.index) {
-      const title = doc.title || '';
-      const body = doc.body || '';
-      const titleLower = title.toLowerCase();
-      const bodyLower = body.toLowerCase();
+// Search through all documents
+for (const [url, doc] of Object.entries(docs)) {
+  const title = doc.title || '';
+  const body = doc.body || '';
+  const description = doc.description || '';
+  const titleLower = title.toLowerCase();
+  const bodyLower = body.toLowerCase();
 
-      const titleMatch = titleLower.includes(lowerQuery);
-      const bodyMatch = bodyLower.includes(lowerQuery);
+  const titleMatch = titleLower.includes(lowerQuery);
+  const bodyMatch = bodyLower.includes(lowerQuery);
 
-      if (titleMatch || bodyMatch) {
-        // Create snippet
-        let snippet = '';
-        if (bodyMatch) {
-          const index = bodyLower.indexOf(lowerQuery);
-          if (index !== -1) {
-            const start = Math.max(0, index - 50);
-            const end = Math.min(body.length, index + lowerQuery.length + 50);
-            snippet = body.substring(start, end);
-            if (start > 0) snippet = '...' + snippet;
-            if (end < body.length) snippet = snippet + '...';
-          } else {
-            snippet = body.substring(0, 150) + '...';
-          }
-        }
+  if (titleMatch || bodyMatch) {
+    results.push({
+      title: title,
+      permalink: url,
+      description: description
+    });
 
-        results.push({
-          title: title,
-          permalink: doc.permalink,
-          snippet: snippet
-        });
-
-        if (results.length >= 20) break;
-      }
-    }
-
-    console.log('✅ Found', results.length, 'results');
+    if (results.length >= 20) break;
+  }
+}
 
     // Display results
-    if (results.length === 0) {
-      searchResults.innerHTML = `
-        <div class="search-message">
-          <p>Ничего не найдено для "${escapeHtml(query)}"</p>
-        </div>
-      `;
-    } else {
-      let html = '';
-      for (const result of results) {
-        html += `
-          <a href="${result.permalink}" class="docs-search-result">
-            <h2>${escapeHtml(result.title)}</h2>
-            ${result.snippet ? `<p>${highlightMatch(escapeHtml(result.snippet), query)}</p>` : ''}
-          </a>
-        `;
-      }
-      searchResults.innerHTML = html;
-    }
+if (results.length === 0) {
+  searchResults.innerHTML = `
+    <div class="search-message">
+      <p>Ничего не найдено для "${escapeHtml(query)}"</p>
+    </div>
+  `;
+} else {
+  let html = '';
+  for (const result of results) {
+    html += `
+      <a href="${result.permalink}" class="docs-search-result">
+        <h2>${escapeHtml(result.title)}</h2>
+        ${result.description ? `<p>${escapeHtml(result.description)}</p>` : ''}
+      </a>
+    `;
+  }
+  searchResults.innerHTML = html;
+}
   }, 200);
 
   // Search input handler
