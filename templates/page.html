@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }}{% endblock title %}
+
+{% block content %}
+  <h1 class="title">{{ page.title }}</h1>
+  <hr>
+
+  {% if page.taxonomies.tags %}
+    <div class="tags-container">
+      <span class="tags-label">Теги:</span>
+      {% for tag in page.taxonomies.tags %}
+        <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}" class="tag-link">
+          <span class="tag-symbol">#</span>{{ tag }}
+        </a>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="page-content">
+    {{ page.content | safe }}
+  </div>
+{% endblock content %}

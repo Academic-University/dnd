@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }}{% endblock title %}
+
+{% block content %}
+  <h1 class="title">{{ section.title }}</h1>
+  <hr>
+
+  {% if section.content %}
+    <div>{{ section.content | safe }}</div>
+  {% endif %}
+
+  {% if section.pages | length > 0 %}
+    <h2>Документы ({{ section.pages | length }})</h2>
+    <ul class="document-list">
+      {% for page in section.pages | sort(attribute="title") %}
+        <li class="document-entry">
+          <h3>
+            <a href="{{ page.permalink }}">{{ page.title }}</a>
+          </h3>
+
+          {% if page.taxonomies.tags %}
+            <div class="tags-list">
+              {% for tag in page.taxonomies.tags %}
+                <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}" class="tag-badge">
+                  <span class="tag-icon">#</span>{{ tag }}
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if page.description %}
+            <p class="description">{{ page.description }}</p>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock content %}

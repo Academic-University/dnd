@@ -1,0 +1,114 @@
+@import 'variables';
+@import 'mixins';
+
+// Список документов на главной
+.document-list {
+  list-style: none;
+  padding: 0;
+
+  li {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-left: 3px solid var(--accent-color);
+    background: rgba(var(--background-rgb, 255, 255, 255), 0.05);
+
+    &:hover {
+      background: rgba(var(--background-rgb, 255, 255, 255), 0.1);
+    }
+  }
+
+  .document-entry {
+    h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.25rem;
+    }
+
+    .description {
+      margin: 0.5rem 0 0 0;
+      color: rgba(var(--text-rgb, 0, 0, 0), 0.7);
+    }
+  }
+}
+
+// Записи на странице тега
+.tag-entries {
+  .tag-entry {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+
+    h2 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .post-date {
+      display: block;
+      font-size: 0.9rem;
+      color: rgba(var(--text-rgb, 0, 0, 0), 0.6);
+      margin: 0.5rem 0;
+    }
+
+    .full-content {
+      margin-top: 1rem;
+    }
+  }
+}
+
+// Облако тегов
+.tag-cloud {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+
+  li {
+    display: inline-block;
+  }
+
+  a {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: var(--midground-color);
+    color: var(--text-color);
+    @include border-radius(20px);
+    transition: $transition-default;
+
+    &:hover {
+      background: var(--accent-color);
+      color: white;
+      text-decoration: none;
+    }
+  }
+}
+
+// Пагинация
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding: 1rem;
+  background: var(--midground-color);
+  @include border-radius(8px);
+
+  .page-info {
+    font-size: 0.9rem;
+    color: rgba(var(--text-rgb, 0, 0, 0), 0.7);
+  }
+
+  .prev,
+  .next {
+    padding: 0.5rem 1rem;
+    background: var(--accent-color);
+    color: white;
+    @include border-radius(4px);
+    text-decoration: none;
+    transition: $transition-default;
+
+    // Используем filter вместо darken для CSS-переменных
+    &:hover {
+      filter: brightness(0.9);
+    }
+  }
+}

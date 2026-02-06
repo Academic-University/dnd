@@ -1,0 +1,62 @@
+// Цветовая схема
+:root {
+  --background-color: #f8f9fa;
+  --midground-color: #e0e0e0;
+  --text-color: #333;
+  --accent-color: #476D30;
+  --background: #f8f9fa;
+}
+
+.dark-mode {
+  --background-color: #262626;
+  --midground-color: #414141;
+  --text-color: #d1d1d1;
+}
+
+// Размеры
+$container-max-width: 750px;
+$aside-min-width: 200px;
+$aside-width: 15vw;
+$search-dialog-width: 900px;
+$search-dialog-height: 700px;
+
+// Шрифты
+$font-primary: 'Montserrat', sans-serif;
+$font-secondary: 'Open Sans', sans-serif;
+$font-fallback: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+// Анимации
+$transition-default: all 0.3s ease;
+$transition-fast: all 0.2s ease;
+$transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+// Тени
+$shadow-dialog: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+// Градиенты
+$bg-pattern: repeating-linear-gradient(
+  45deg,
+  rgba(114, 114, 114, 0.01) 0 1px,
+  transparent 1px 5px
+),
+repeating-linear-gradient(
+  -45deg,
+  rgba(114, 114, 114, 0.01) 0 1px,
+  transparent 1px 5px
+),
+var(--background-color);
+
+$accent-pattern: repeating-linear-gradient(
+  45deg,
+  rgba(214, 114, 114, 0.01) 0 1px,
+  transparent 1px 5px
+),
+repeating-linear-gradient(
+  -45deg,
+  rgba(114, 114, 114, 0.01) 0 1px,
+  transparent 1px 5px
+),
+var(--accent-color);

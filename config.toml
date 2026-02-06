@@ -1,0 +1,23 @@
+# base_url = "http://127.0.0.1:8000"
+base_url = "https://github.com/Academic-University/dnd"
+
+description = "Независимая библиотека"
+
+
+compile_sass = true
+build_search_index = true
+generate_feeds = true
+feed_limit = 10
+feed_filenames = ["atom.xml"]
+default_language = "ru"
+
+[markdown.highlighting]
+theme = "catppuccin-mocha"
+
+[[taxonomies]]
+name = "tags"
+feed = true
+
+[[taxonomies]]
+name = "time"
+feed = true

@@ -1,0 +1,127 @@
+@import 'variables';
+@import 'mixins';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-secondary, $font-fallback;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 20px;
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  background: $bg-pattern;
+
+  @include custom-scrollbar(var(--accent-color));
+}
+
+svg {
+  fill: var(--accent-color);
+}
+
+a {
+  color: #226622;
+  background-color: transparent;
+  text-decoration: none;
+  transition: $transition-default;
+
+  &:link {
+    color: #226622;
+  }
+
+  &:visited {
+    color: var(--accent-color);
+  }
+
+  &:hover {
+    background-color: transparent;
+    text-decoration: underline;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: $font-primary;
+    text-align: center;
+    font-weight: 600;
+    position: relative;
+    margin: 1rem auto;
+}
+
+h1 {
+  &.title {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 700;
+
+
+    &::after {
+      display: none;
+    }
+  }
+}
+
+p {
+    font-family: $font-primary;
+    font-weight: 300;
+    margin: 1rem 0;
+}
+
+strong {
+    font-weight: 500;
+}
+
+.justified {
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+// Изображения
+img {
+  width: 80%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+
+  &.logo {
+    width: auto;
+    height: auto;
+    max-width: 120px;
+    max-height: 120px;
+    object-fit: contain;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  @include border-radius(15px);
+  overflow: hidden;
+
+  th {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  td {
+    padding: 5px;
+    text-align: center;
+    font-weight: 300;
+  }
+}
+
+hr {
+  border: none;
+  height: 0.175rem;
+  background-color: var(--text-color);
+  @include border-radius(2px);
+}

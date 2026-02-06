@@ -1,0 +1,42 @@
+@import 'variables';
+@import 'mixins';
+
+.wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 280px 1fr 280px;
+    gap: 2rem;
+    position: relative;
+}
+
+header {
+  width: 100%;
+  padding: 20px 0; /* vertical padding only */
+  margin: 0;
+  text-align: center;
+  background: var(--background-color); /* optional, for visual consistency */
+}
+
+main {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 280px 1fr 280px;
+    gap: 2rem;
+}
+
+.precontainer {
+    grid-column: 2;
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 750px;
+    width: 750px;
+    font-family: 'Open Sans', sans-serif;
+    line-height: 1.6;
+}
+
+.category {
+    margin: 0 0 3rem 0;
+}

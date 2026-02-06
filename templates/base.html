@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+  <link rel="stylesheet" href="{{ get_url(path="style.css", trailing_slash=false) }}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <header>
+    <button class="search-trigger" id="search-trigger" aria-label="Open search">
+      <div class="trigger-content">
+        <svg class="search-icon" viewBox="0 0 24 24">
+          <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <span class="search-placeholder">Search...</span>
+        <kbd class="shortcut-key">Ctrl+K</kbd>
+      </div>
+    </button>
+  </header>
+
+  <div class="wrapper">
+    <main>
+      <aside>
+        <!-- Your sidebar content here -->
+        <div>
+          <!-- Sidebar items -->
+        </div>
+      </aside>
+
+      <div class="precontainer">
+        <div class="container">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+
+      <aside>
+        <!-- Right sidebar if needed -->
+      </aside>
+    </main>
+  </div>
+
+  <!-- Search Dialog -->
+  <dialog class="search-dialog" id="search-dialog">
+    <div class="dialog-content">
+      <div class="search-header">
+        <svg class="search-icon" viewBox="0 0 24 24">
+          <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input
+          type="text"
+          class="search-input"
+          id="search-input"
+          placeholder="Search documentation..."
+          autofocus
+        >
+        <button class="close-button" id="close-search" aria-label="Close search">×</button>
+      </div>
+      <div class="search-results" id="search-results">
+        <div class="search-message" id="search-message">Start typing to search...</div>
+      </div>
+    </div>
+  </dialog>
+
+ <script>
+  // Load Zola search index using dynamic import
+  let searchData = null;
+
+  // Create a script element to load the search index
+  const script = document.createElement('script');
+  script.src = '/search_index.ru.js';
+  script.async = true;
+  script.onload = function() {
+    // Zola sets window.search automatically
+    searchData = window.search;
+    console.log('Search index loaded successfully');
+    console.log('Search data structure:', searchData);
+    if (searchData && searchData.index) {
+      console.log('Number of documents indexed:', searchData.index.length);
+      console.log('Sample document:', searchData.index[0]);
+    }
+  };
+  script.onerror = function() {
+    console.error('Failed to load search index');
+  };
+  document.head.appendChild(script);
+
+  // Search functionality
+  const searchTrigger = document.getElementById('search-trigger');
+  const searchDialog = document.getElementById('search-dialog');
+  const searchInput = document.getElementById('search-input');
+  const closeSearch = document.getElementById('close-search');
+  const searchResults = document.getElementById('search-results');
+  const searchMessage = document.getElementById('search-message');
+
+  // Debounce function
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  // Open search dialog
+  searchTrigger.addEventListener('click', () => {
+    searchDialog.showModal();
+    searchInput.focus();
+  });
+
+  // Close search dialog
+  closeSearch.addEventListener('click', () => {
+    searchDialog.close();
+    searchInput.value = '';
+    searchResults.innerHTML = '';
+    searchMessage.textContent = 'Start typing to search...';
+    searchMessage.style.display = 'block';
+  });
+
+  // Close with Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && searchDialog.open) {
+      searchDialog.close();
+      searchInput.value = '';
+      searchResults.innerHTML = '';
+      searchMessage.textContent = 'Start typing to search...';
+      searchMessage.style.display = 'block';
+    }
+    // Ctrl+K or Cmd+K to open search
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      searchDialog.showModal();
+      searchInput.focus();
+    }
+  });
+
+  // Click outside to close
+  searchDialog.addEventListener('click', (e) => {
+    const dialogDimensions = searchDialog.getBoundingClientRect();
+    if (
+      e.clientX < dialogDimensions.left ||
+      e.clientX > dialogDimensions.right ||
+      e.clientY < dialogDimensions.top ||
+      e.clientY > dialogDimensions.bottom
+    ) {
+      searchDialog.close();
+      searchInput.value = '';
+      searchResults.innerHTML = '';
+      searchMessage.textContent = 'Start typing to search...';
+      searchMessage.style.display = 'block';
+    }
+  });
+
+  // Simple search implementation
+  const performSearch = debounce((query) => {
+    console.log('Searching for:', query);
+
+    if (!searchData || !searchData.index || query.length < 2) {
+      console.log('No search data or query too short');
+      searchMessage.textContent = 'Start typing to search...';
+      searchResults.innerHTML = '';
+      searchMessage.style.display = 'block';
+      return;
+    }
+
+    // Clear previous results
+    searchResults.innerHTML = '';
+    searchMessage.style.display = 'none';
+
+    const results = [];
+    const lowerQuery = query.toLowerCase().trim();
+
+    console.log('Total documents to search:', searchData.index.length);
+
+    // Search through all documents
+    for (const doc of searchData.index) {
+      const title = doc.title || '';
+      const body = doc.body || '';
+      const titleLower = title.toLowerCase();
+      const bodyLower = body.toLowerCase();
+
+      const titleMatch = titleLower.includes(lowerQuery);
+      const bodyMatch = bodyLower.includes(lowerQuery);
+
+      if (titleMatch || bodyMatch) {
+        // Find snippet around the match
+        let snippet = '';
+        if (bodyMatch) {
+          const index = bodyLower.indexOf(lowerQuery);
+          if (index !== -1) {
+            const start = Math.max(0, index - 50);
+            const end = Math.min(body.length, index + lowerQuery.length + 50);
+            snippet = body.substring(start, end);
+            if (start > 0) snippet = '...' + snippet;
+            if (end < body.length) snippet = snippet + '...';
+          } else {
+            snippet = body.substring(0, 150) + '...';
+          }
+        }
+
+        results.push({
+          title: title,
+          permalink: doc.permalink,
+          snippet: snippet
+        });
+
+        // Limit to 20 results
+        if (results.length >= 20) break;
+      }
+    }
+
+    console.log('Found', results.length, 'results');
+
+    // Display results
+    if (results.length === 0) {
+      searchResults.innerHTML = `
+        <div class="search-message">
+          <p>Ничего не найдено для "${query}"</p>
+        </div>
+      `;
+    } else {
+      let html = '';
+      for (const result of results) {
+        html += `
+          <a href="${result.permalink}" class="docs-search-result">
+            <h2>${escapeHtml(result.title)}</h2>
+            ${result.snippet ? `<p>${highlightMatch(escapeHtml(result.snippet), query)}</p>` : ''}
+          </a>
+        `;
+      }
+      searchResults.innerHTML = html;
+    }
+  }, 200);
+
+  // Search input handler
+  searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.trim();
+    console.log('Input changed:', query);
+    performSearch(query);
+  });
+
+  // Helper function to escape HTML
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // Helper function to highlight matches
+  function highlightMatch(text, query) {
+    if (!query) return text;
+    const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+  }
+
+  // Helper function to escape regex special characters
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+</script>
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

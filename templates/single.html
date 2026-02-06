@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Тег: {{ term.name }}{% endblock title %}
+
+{% block content %}
+  <h1 class="title">Тег: <span class="tag-name">{{ term.name }}</span></h1>
+  <hr>
+
+  <div class="tag-info">
+    <span class="tag-count">{{ term.pages | length }} документ{{ term.pages | length | pluralize_ru }}</span>
+  </div>
+
+  {% if term.pages | length > 0 %}
+    <div class="tag-entries">
+      {% for page in term.pages %}
+        <article class="tag-entry">
+          <h2 class="entry-title">
+            <a href="{{ page.permalink }}">{{ page.title }}</a>
+          </h2>
+
+          {% if page.taxonomies.tags %}
+            <div class="tags-list inline-tags">
+              {% for tag in page.taxonomies.tags %}
+                <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}" class="tag-badge">
+                  <span class="tag-icon">#</span>{{ tag }}
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="full-content">
+            {{ page.content | safe }}
+          </div>
+
+          {% if not loop.last %}
+            <hr class="entry-divider">
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Нет документов с этим тегом.</p>
+  {% endif %}
+{% endblock content %}
