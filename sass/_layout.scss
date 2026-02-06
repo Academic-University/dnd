@@ -1,28 +1,44 @@
 @import 'variables';
 @import 'mixins';
 
+// Mobile-first responsive breakpoints
+$breakpoint-mobile: 768px;
+$breakpoint-tablet: 1024px;
+
 .wrapper {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  position: relative;
+  padding: 0 1rem;
+
+  @media (min-width: $breakpoint-tablet) {
     grid-template-columns: 280px 1fr 280px;
     gap: 2rem;
-    position: relative;
+    padding: 0;
+  }
 }
 
 header {
   width: 100%;
-  padding: 20px 0; /* vertical padding only */
+  padding: 20px 0;
   margin: 0;
   text-align: center;
-  background: var(--background-color); /* optional, for visual consistency */
+  background: var(--background-color);
 }
 
 main {
-    grid-column: 1 / -1;
-    display: grid;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @media (min-width: $breakpoint-tablet) {
     grid-template-columns: 280px 1fr 280px;
     gap: 2rem;
+  }
 }
 
 .precontainer {
@@ -37,6 +53,12 @@ main {
     line-height: 1.6;
 }
 
+
 .category {
+  margin: 0 0 2rem 0;
+
+  @media (min-width: $breakpoint-tablet) {
     margin: 0 0 3rem 0;
+  }
 }
+c
