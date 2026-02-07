@@ -234,7 +234,6 @@ if (results.length === 0) {
   // Search input handler
   searchInput.addEventListener('input', (e) => {
     const query = e.target.value.trim();
-    console.log('⌨️ Input:', query);
     performSearch(query);
   });
 
@@ -255,7 +254,7 @@ if (results.length === 0) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 </script>
-
+{% block scripts %} {% endblock scripts %}
   {% block extra_js %}{% endblock %}
 </body>
 </html>

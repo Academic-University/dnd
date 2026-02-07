@@ -112,3 +112,134 @@
     }
   }
 }
+
+.librarian-greeting {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid #ffd700;
+    border-radius: 4px;
+    font-style: italic;
+    color: #fff;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    position: relative;
+
+    &::before {
+        content: '"';
+        position: absolute;
+        left: 10px;
+        top: 5px;
+        font-size: 2rem;
+        opacity: 0.3;
+    }
+
+    &::after {
+        content: '"';
+        position: absolute;
+        right: 10px;
+        bottom: 5px;
+        font-size: 2rem;
+        opacity: 0.3;
+    }
+}
+
+@media (max-width: 768px) {
+    .librarian-greeting {
+        font-size: 1rem;
+        padding: 1rem;
+    }
+}
+
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.card {
+  background: var(--card-bg, #fff);
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.card-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+  background: var(--card-header-bg, #f8f9fa);
+
+  h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--text-color, #333);
+
+    a {
+      color: var(--link-color, #0066cc);
+      text-decoration: none;
+      transition: color 0.2s;
+
+      &:hover {
+        color: var(--link-hover-color, #004499);
+      }
+    }
+  }
+}
+
+.card-body {
+  padding: 1rem;
+  flex-grow: 1;
+
+  .card-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-color, #333);
+
+    p {
+      margin: 0.5rem 0;
+    }
+
+    p:first-child {
+      margin-top: 0;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.card-footer {
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--border-color, #e0e0e0);
+  background: var(--card-footer-bg, #fafafa);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.badge {
+  background: var(--badge-bg, #e9ecef);
+  color: var(--badge-color, #495057);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .library-grid {
+    grid-template-columns: 1fr;
+  }
+}

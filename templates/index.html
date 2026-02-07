@@ -1,39 +1,35 @@
 {% extends "base.html" %}
 
-{% block title %}{{ section.title }}{% endblock title %}
-
 {% block content %}
-  <h1 class="title">{{ section.title }}</h1>
-  <hr>
+<div class="precontainer">
+  <div class="container">
+    <h1>{{ section.title }}</h1>
 
-  {% if section.content %}
-    <div>{{ section.content | safe }}</div>
-  {% endif %}
+    {{ section.content | safe }}
 
-  {% if section.pages | length > 0 %}
-    <h2>Документы ({{ section.pages | length }})</h2>
-    <ul class="document-list">
-      {% for page in section.pages | sort(attribute="title") %}
-        <li class="document-entry">
-          <h3>
-            <a href="{{ page.permalink }}">{{ page.title }}</a>
-          </h3>
+    <hr>
 
-          {% if page.taxonomies.tags %}
-            <div class="tags-list">
-              {% for tag in page.taxonomies.tags %}
-                <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}" class="tag-badge">
-                  <span class="tag-icon">#</span>{{ tag }}
-                </a>
-              {% endfor %}
+    {% set sorted_paths = section.subsections | sort %}
+
+    <div class="library-grid">
+      {% for subsection_path in sorted_paths %}
+        {% set subsection = get_section(path=subsection_path) %}
+        <a href="{{ subsection.permalink }}" class="card-link">
+          <article class="card section-card">
+            <div class="card-header">
+              <h3>{{ subsection.title }}</h3>
             </div>
-          {% endif %}
-
-          {% if page.description %}
-            <p class="description">{{ page.description }}</p>
-          {% endif %}
-        </li>
+            <div class="card-body">
+              {% if subsection.content %}
+                <div class="card-description">
+                  {{ subsection.content | safe }}
+                </div>
+              {% endif %}
+            </div>
+          </article>
+        </a>
       {% endfor %}
-    </ul>
-  {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock content %}

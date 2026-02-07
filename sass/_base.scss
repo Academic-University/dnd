@@ -29,22 +29,13 @@ svg {
 }
 
 a {
-  color: #226622;
+color: var(--accent-color);
   background-color: transparent;
   text-decoration: none;
   transition: $transition-default;
 
-  &:link {
-    color: #226622;
-  }
-
-  &:visited {
-    color: var(--accent-color);
-  }
-
   &:hover {
     background-color: transparent;
-    text-decoration: underline;
   }
 }
 

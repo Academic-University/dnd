@@ -1,5 +1,7 @@
 <img src="static/dnd.svg" width="100" alt="Logo">
 
+---
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![GitHub Pages](https://github.com/Academic-University/dnd/actions/workflows/gh-pages.yml/badge.svg)
 
@@ -18,7 +20,7 @@
 - **Общая история.** Информация о наиболее важных исторических событиях.
 - **Общая культура.** Более подробно про культуру и традиции.
 - **Общее мироустройство.** Современные представления о работе мира.
-- **Каталог божественных сущеностей.**
+- **Каталог божественных сущностей.**
 
 ## Участие
 
