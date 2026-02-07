@@ -1,10 +1,6 @@
 @import 'variables';
 @import 'mixins';
 
-// Mobile-first responsive breakpoints
-$breakpoint-mobile: 768px;
-$breakpoint-tablet: 1024px;
-
 .search-trigger {
   width: 100%;
   max-width: 400px;
@@ -13,23 +9,14 @@ $breakpoint-tablet: 1024px;
   border: 1px solid var(--midground-color);
   font-size: 14px;
   cursor: pointer;
-  margin: 0 auto; // Centered on all screens
-
-  @media (max-width: $breakpoint-mobile) {
-    max-width: 100%;
-    padding: 10px 15px;
-    font-size: 13px;
-  }
+  margin: 0 auto; // centered
+  display: block;
 
   .trigger-content {
     display: flex;
     align-items: center;
     gap: 12px;
     flex: 1;
-
-    @media (max-width: $breakpoint-mobile) {
-      gap: 8px;
-    }
   }
 
   .search-icon {
@@ -45,10 +32,6 @@ $breakpoint-tablet: 1024px;
     color: rgba(var(--text-rgb, 0, 0, 0), 0.6);
     font-family: 'Open Sans', sans-serif;
     font-size: 0.95rem;
-
-    @media (max-width: $breakpoint-mobile) {
-      font-size: 0.9rem;
-    }
   }
 
   .shortcut-key {
@@ -59,15 +42,15 @@ $breakpoint-tablet: 1024px;
     font-family: monospace;
     font-size: 0.9rem;
     flex-shrink: 0;
-
-    @media (max-width: $breakpoint-mobile) {
-      display: none; // Hide shortcut on mobile
-    }
   }
 
   &:hover {
     border-color: var(--accent-color);
     background: var(--background);
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    margin: 20px 15px;
   }
 }
 
@@ -77,9 +60,9 @@ $breakpoint-tablet: 1024px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90%;
+  width: 50vw; // 50% of viewport width on desktop
   max-width: 90vw;
-  height: 80vh;
+  height: 60vh;
   max-height: 90vh;
   border: 1px solid var(--midground-color);
   border-radius: 12px;
@@ -92,16 +75,9 @@ $breakpoint-tablet: 1024px;
   background: var(--background-color);
   z-index: 1000;
 
-  @media (min-width: $breakpoint-tablet) {
-    width: 50%;
-    max-width: 600px;
-    height: 500px;
-  }
-
   @media (max-width: $breakpoint-mobile) {
-    width: 90%;
-    height: 85vh;
-    border-radius: 8px;
+    width: 85vw; // 85% on mobile
+    height: 70vh;
   }
 
   &::backdrop {
@@ -120,23 +96,19 @@ $breakpoint-tablet: 1024px;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 16px;
+  padding: 16px 24px;
   border-bottom: 1px solid var(--midground-color);
   background: var(--background-color);
 
-  @media (min-width: $breakpoint-tablet) {
-    padding: 16px 24px;
+  @media (max-width: $breakpoint-mobile) {
+    padding: 12px 16px;
+    gap: 8px;
   }
 
   .search-icon {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     flex-shrink: 0;
-
-    @media (min-width: $breakpoint-tablet) {
-      width: 24px;
-      height: 24px;
-    }
   }
 
   .search-input {
@@ -144,15 +116,10 @@ $breakpoint-tablet: 1024px;
     background: transparent;
     border: none;
     outline: none;
-    font-size: 16px;
+    font-size: 18px;
     color: var(--text-color);
-    padding: 8px 0;
+    padding: 12px 0;
     font-family: 'Open Sans', sans-serif;
-
-    @media (min-width: $breakpoint-tablet) {
-      font-size: 18px;
-      padding: 12px 0;
-    }
 
     &::placeholder {
       color: rgba(var(--text-rgb, 0, 0, 0), 0.6);
@@ -161,6 +128,11 @@ $breakpoint-tablet: 1024px;
     &:focus {
       outline: none;
     }
+
+    @media (max-width: $breakpoint-mobile) {
+      font-size: 16px;
+      padding: 8px 0;
+    }
   }
 
   .close-button {
@@ -168,16 +140,17 @@ $breakpoint-tablet: 1024px;
     border: none;
     color: var(--text-color);
     cursor: pointer;
-    font-size: 20px;
+    font-size: 24px;
     padding: 4px;
     border-radius: 4px;
 
-    @media (min-width: $breakpoint-tablet) {
-      font-size: 24px;
-    }
-
     &:hover {
       background: var(--midground-color);
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+      font-size: 20px;
+      padding: 2px;
     }
   }
 }
@@ -189,11 +162,7 @@ $breakpoint-tablet: 1024px;
   margin: 0;
   scroll-behavior: smooth;
   overscroll-behavior: contain;
-  max-height: calc(100% - 60px);
-
-  @media (min-width: $breakpoint-tablet) {
-    max-height: calc(100% - 70px);
-  }
+  max-height: calc(100% - 70px);
 }
 
 .dialog-content {
@@ -206,32 +175,25 @@ $breakpoint-tablet: 1024px;
 .search-message {
   color: rgba(var(--text-rgb, 0, 0, 0), 0.6);
   text-align: center;
-  margin-top: 16px;
-  padding: 1.5rem;
-  font-size: 1rem;
+  margin-top: 24px;
+  padding: 2rem;
+  font-size: 1.1rem;
 
-  @media (min-width: $breakpoint-tablet) {
-    margin-top: 24px;
-    padding: 2rem;
-    font-size: 1.1rem;
+  @media (max-width: $breakpoint-mobile) {
+    padding: 1.5rem;
+    font-size: 1rem;
   }
 }
 
 // Лоадер
 .loader {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border: 3px solid var(--midground-color);
   border-top-color: var(--accent-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin: 1.5rem auto;
-
-  @media (min-width: $breakpoint-tablet) {
-    width: 24px;
-    height: 24px;
-    margin: 2rem auto;
-  }
+  margin: 2rem auto;
 }
 
 @keyframes spin {
@@ -243,15 +205,15 @@ $breakpoint-tablet: 1024px;
 // Результаты поиска
 .docs-search-result {
   display: block;
-  padding: 1rem 1.25rem;
+  padding: 1.25rem 1.5rem;
   text-decoration: none !important;
   color: var(--text-color);
   background-color: transparent;
   border-bottom: 1px solid var(--midground-color);
   position: relative;
 
-  @media (min-width: $breakpoint-tablet) {
-    padding: 1.25rem 1.5rem;
+  @media (max-width: $breakpoint-mobile) {
+    padding: 1rem 1.25rem;
   }
 
   &:last-child {
@@ -266,12 +228,12 @@ $breakpoint-tablet: 1024px;
   h2 {
     color: var(--text-color);
     margin: 0 0 0.5rem 0;
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     font-family: 'Montserrat', sans-serif;
     font-weight: 300;
 
-    @media (min-width: $breakpoint-tablet) {
-      font-size: 1.25rem;
+    @media (max-width: $breakpoint-mobile) {
+      font-size: 1.1rem;
     }
   }
 
@@ -280,13 +242,12 @@ $breakpoint-tablet: 1024px;
     text-align: justify;
     text-justify: inter-word;
     margin: 0;
-    font-size: 0.9rem;
-    line-height: 1.5;
+    font-size: 0.95rem;
+    line-height: 1.6;
     font-family: 'Open Sans', sans-serif;
 
-    @media (min-width: $breakpoint-tablet) {
-      font-size: 0.95rem;
-      line-height: 1.6;
+    @media (max-width: $breakpoint-mobile) {
+      font-size: 0.9rem;
     }
   }
 }

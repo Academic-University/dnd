@@ -1,23 +1,14 @@
 @import 'variables';
 @import 'mixins';
 
-// Mobile-first responsive breakpoints
-$breakpoint-mobile: 768px;
-$breakpoint-tablet: 1024px;
-
 .wrapper {
   max-width: 1200px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
+  padding: 0 20px;
   position: relative;
-  padding: 0 1rem;
 
-  @media (min-width: $breakpoint-tablet) {
-    grid-template-columns: 280px 1fr 280px;
-    gap: 2rem;
-    padding: 0;
+  @media (max-width: $breakpoint-mobile) {
+    padding: 0 15px;
   }
 }
 
@@ -30,34 +21,34 @@ header {
 }
 
 main {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 20px 0;
 
-  @media (min-width: $breakpoint-tablet) {
-    grid-template-columns: 280px 1fr 280px;
-    gap: 2rem;
+  @media (max-width: $breakpoint-mobile) {
+    padding: 15px 0;
+    gap: 1.5rem;
   }
 }
 
-.precontainer {
-    grid-column: 2;
-}
-
 .container {
-    margin: 0 auto;
-    max-width: 750px;
-    width: 750px;
-    font-family: 'Open Sans', sans-serif;
-    line-height: 1.6;
-}
+  margin: 0 auto;
+  max-width: $container-width;
+  width: 100%;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.6;
 
+  @media (max-width: $breakpoint-mobile) {
+    max-width: 100%;
+    padding: 0 10px;
+  }
+}
 
 .category {
-  margin: 0 0 2rem 0;
+  margin: 0 0 3rem 0;
 
-  @media (min-width: $breakpoint-tablet) {
-    margin: 0 0 3rem 0;
+  @media (max-width: $breakpoint-mobile) {
+    margin: 0 0 2rem 0;
   }
 }

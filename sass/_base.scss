@@ -1,10 +1,6 @@
 @import 'variables';
 @import 'mixins';
 
-// Mobile-first responsive breakpoints
-$breakpoint-mobile: 768px;
-$breakpoint-tablet: 1024px;
-
 * {
   margin: 0;
   padding: 0;
@@ -17,14 +13,14 @@ body {
   display: flex;
   flex-direction: column;
   margin: 0;
-  padding: 10px;
+  padding: 20px;
   color: var(--text-color);
+  justify-content: center;
   background: $bg-pattern;
   @include custom-scrollbar(var(--accent-color));
 
-  @media (min-width: $breakpoint-tablet) {
-    padding: 20px;
-    justify-content: center;
+  @media (max-width: $breakpoint-mobile) {
+    padding: 10px;
   }
 }
 
@@ -60,18 +56,19 @@ h1, h2, h3, h4, h5, h6 {
   margin: 1rem auto;
 
   @media (max-width: $breakpoint-mobile) {
-    font-size: calc(1rem + 1vw);
+    font-size: 0.9em;
+    margin: 0.75rem auto;
   }
 }
 
 h1 {
   &.title {
     text-align: center;
-    font-size: 2rem;
+    font-size: 3rem;
     font-weight: 700;
 
-    @media (min-width: $breakpoint-tablet) {
-      font-size: 3rem;
+    @media (max-width: $breakpoint-mobile) {
+      font-size: 2rem;
     }
 
     &::after {
@@ -86,7 +83,8 @@ p {
   margin: 1rem 0;
 
   @media (max-width: $breakpoint-mobile) {
-    font-size: 0.95rem;
+    font-size: 0.95em;
+    margin: 0.75rem 0;
   }
 }
 
@@ -101,25 +99,25 @@ strong {
 
 // Изображения
 img {
-  width: 100%;
+  width: 80%;
   height: auto;
   display: block;
   margin: 0 auto;
 
-  @media (min-width: $breakpoint-tablet) {
-    width: 80%;
+  @media (max-width: $breakpoint-mobile) {
+    width: 100%;
   }
 
   &.logo {
     width: auto;
     height: auto;
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 120px;
+    max-height: 120px;
     object-fit: contain;
 
-    @media (min-width: $breakpoint-tablet) {
-      max-width: 120px;
-      max-height: 120px;
+    @media (max-width: $breakpoint-mobile) {
+      max-width: 100px;
+      max-height: 100px;
     }
   }
 }
@@ -127,43 +125,34 @@ img {
 table {
   width: 100%;
   border-collapse: collapse;
-  @include border-radius(10px);
+  @include border-radius(15px);
   overflow: hidden;
+  font-size: 0.95em;
 
-  @media (min-width: $breakpoint-tablet) {
-    @include border-radius(15px);
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 0.85em;
+    display: block;
+    overflow-x: auto;
   }
 
   th {
     background-color: var(--accent-color);
     color: white;
-    padding: 8px;
+    padding: 10px;
     text-align: center;
     font-weight: 500;
-
-    @media (min-width: $breakpoint-tablet) {
-      padding: 10px;
-    }
   }
 
   td {
-    padding: 4px;
+    padding: 5px;
     text-align: center;
     font-weight: 300;
-
-    @media (min-width: $breakpoint-tablet) {
-      padding: 5px;
-    }
   }
 }
 
 hr {
   border: none;
-  height: 0.125rem;
+  height: 0.175rem;
   background-color: var(--text-color);
   @include border-radius(2px);
-
-  @media (min-width: $breakpoint-tablet) {
-    height: 0.175rem;
-  }
 }
