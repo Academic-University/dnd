@@ -1,6 +1,8 @@
 +++
+draft = false
 title = "Тиамат"
 description = "Пятиглавая богиня зла"
+
 [taxonomies]
 tags = ["драконы", "боги", "мифология"]
 +++
