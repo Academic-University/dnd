@@ -54,11 +54,6 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   position: relative;
   margin: 1rem auto;
-
-  @media (max-width: $breakpoint-mobile) {
-    font-size: 0.9em;
-    margin: 0.75rem auto;
-  }
 }
 
 h1 {
