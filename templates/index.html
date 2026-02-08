@@ -9,11 +9,12 @@
 
     <hr>
 
+    {# Sort paths alphabetically #}
     {% set sorted_paths = section.subsections | sort %}
 
     <div class="library-grid">
-      {% for subsection_path in sorted_paths %}
-        {% set subsection = get_section(path=subsection_path) %}
+      {% for path in sorted_paths %}
+        {% set subsection = get_section(path=path) %}
         <a href="{{ subsection.permalink }}" class="card-link">
           <article class="card section-card">
             <div class="card-header">
